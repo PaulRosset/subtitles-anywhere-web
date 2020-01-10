@@ -1,0 +1,24 @@
+{
+  "name": "Subtitles Anywhere Web",
+  "version": "1.0.0",
+  "description": "Give you the possibility to add any provided subtitles to your prefered service streaming web platform.",
+  "homepage_url": "https://github.com/PaulRosset/subtitles-anywhere-web",
+  "manifest_version": 2,
+  "minimum_chrome_version": "68",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "options.html",
+    "default_title": "Subtitles Anywhere"
+  },
+  "optional_permissions": ["http://*/*", "https://*/*"],
+  "icons": {
+    "128": "icon.png"
+  },
+  "content_scripts": [
+    {
+      "run_at": "document_start",
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
