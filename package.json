@@ -11,6 +11,7 @@
     "deploy": "yarn build && zip -r build-$npm_package_version.zip build/"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.91",
     "@types/node": "^13.1.6",
     "copy-webpack-plugin": "^5.1.1",
     "terser-webpack-plugin": "^2.3.2",
@@ -18,5 +19,8 @@
     "typescript": "^3.7.4",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "rx-player": "^3.17.1"
   }
 }
