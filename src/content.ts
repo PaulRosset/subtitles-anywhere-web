@@ -6,6 +6,8 @@ import TextTrackRenderer, {
 } from "rx-player/experimental/tools/TextTrackRenderer";
 
 import { checkDomVideoChanges } from "./utils/domChanges.ts";
+import { resizeObserver } from "./utils/resizeObserver.ts";
+// import { timer } from "./utils/timer.ts";
 
 TextTrackRenderer.addParsers([
   TTML_PARSER,
@@ -28,33 +30,52 @@ checkDomVideoChanges(() => {
   }
   document.documentElement.classList.add("subtitlesEverywhere");
 
+  // Get informations about the videoElement
   const videoElement = videoElements[0];
+  // const { bottom, width, top } = videoElement.getBoundingClientRect();
+
+  // Set the UI to manage the textTrack rendering
   const containerTextTrackManager = document.createElement("div");
   const startRenderTextTrackBtn = document.createElement("button");
   const stopTextTrackBtn = document.createElement("button");
   startRenderTextTrackBtn.innerText = "Start";
   stopTextTrackBtn.innerText = "Stop";
+
   containerTextTrackManager.style.padding = "10px";
-  containerTextTrackManager.style.zIndex = "100000";
+  containerTextTrackManager.style.zIndex = "10000";
   containerTextTrackManager.style.backgroundColor = "white";
   containerTextTrackManager.style.position = "absolute";
-  containerTextTrackManager.style.right = "50%";
+  // containerTextTrackManager.style.top = `${top}px`;
 
+  // Set up the UI to display the text track in
   const textTrackDisplayer = document.createElement("div");
   textTrackDisplayer.style.position = "absolute";
-  textTrackDisplayer.style.zIndex = "100000";
-  textTrackDisplayer.style.bottom = "20px";
-  textTrackDisplayer.style.width = "100%";
+  textTrackDisplayer.style.zIndex = "10000";
+  // textTrackDisplayer.style.top = `${bottom}px`;
+  // textTrackDisplayer.style.width = `${width}px`;
+
+  resizeObserver(videoElement, (_: DOMRectReadOnly) => {
+    console.warn(videoElement.getBoundingClientRect());
+    const { bottom, width, top } = videoElement.getBoundingClientRect();
+    containerTextTrackManager.style.top = `${top +
+      containerTextTrackManager.clientHeight}px`;
+
+    textTrackDisplayer.style.top = `${bottom}px`;
+    textTrackDisplayer.style.width = `${width}px`;
+  });
+
   const textTrackRenderer = new TextTrackRenderer({
-    videoElement: videoElement,
+    videoElement,
     textTrackElement: textTrackDisplayer,
   });
-  // containerTextTrackManager.onmouseenter = () => {
-  //   console.warn("ENTER");
-  // };
-  // containerTextTrackManager.onmouseleave = () => {
-  //   console.warn("LEAVE");
-  // };
+  // timer(
+  //   () => {
+  //     containerTextTrackManager.style.display = "block";
+  //   },
+  //   () => {
+  //     containerTextTrackManager.style.display = "none";
+  //   },
+  // );
   startRenderTextTrackBtn.onclick = async () => {
     console.warn("START RENDER");
     chrome.storage.local.get(
@@ -76,18 +97,6 @@ checkDomVideoChanges(() => {
     console.warn("STOP RENDER");
     textTrackRenderer.removeTextTrack();
   };
-  // videoElement.parentElement!.onmouseenter = () => {
-  //   console.warn("POLO");
-  //   containerTextTrackManager.style.display = "block";
-  // };&
-  // videoElement.parentElement!.onmouseleave = (e: any) => {
-  //   console.warn("HELLo", e);
-  //   containerTextTrackManager.style.display = "none";
-  // };
   containerTextTrackManager.append(startRenderTextTrackBtn, stopTextTrackBtn);
-  videoElement.parentNode!.append(
-    containerTextTrackManager,
-    textTrackDisplayer,
-  );
-  // videoElement.parentNode!.appendChild(textTrackDisplayer);
+  document.body.append(containerTextTrackManager, textTrackDisplayer);
 });
