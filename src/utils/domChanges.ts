@@ -8,7 +8,7 @@ export function checkDomVideoChanges(cb: () => void) {
           mutation.addedNodes.forEach(addedNode => {
             if (
               (addedNode as Element).tagName === "VIDEO" ||
-              (addedNode as Element)?.className?.match(/player/)
+              /player/i.test((addedNode as Element)?.className)
             ) {
               console.warn("pOLOOOO", addedNode);
               cb();

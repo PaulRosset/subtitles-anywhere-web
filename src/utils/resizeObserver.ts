@@ -13,3 +13,22 @@ export function resizeObserver(
 
   resizeObserver.observe(elem);
 }
+
+export function determineBestPositionForTextTrack(
+  videoElement: HTMLVideoElement,
+  textTrackDisplayer: HTMLDivElement,
+) {
+  const {
+    bottom: videoElementViewPortBottom,
+    width,
+  } = videoElement.getBoundingClientRect();
+  const videoElementHeight = videoElement.videoHeight;
+  textTrackDisplayer.style.width = `${width}px`;
+  if (videoElementViewPortBottom > videoElementHeight) {
+    const diff = (videoElementViewPortBottom - videoElementHeight) / 2;
+    textTrackDisplayer.style.top = `${videoElementViewPortBottom - diff}px`;
+    return;
+  }
+  textTrackDisplayer.style.top = `${videoElementViewPortBottom}px`;
+  return;
+}

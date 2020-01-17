@@ -10,6 +10,9 @@ module.exports = () => ({
     content: "./src/content.ts",
     options: "./src/options.ts",
   },
+  resolve: {
+    extensions: [".ts", ".js", ".json"],
+  },
   output: {
     path: path.join(__dirname, "build"),
     filename: "[name].js",

@@ -5,8 +5,11 @@ import TextTrackRenderer, {
   SAMI_PARSER,
 } from "rx-player/experimental/tools/TextTrackRenderer";
 
-import { checkDomVideoChanges } from "./utils/domChanges.ts";
-import { resizeObserver } from "./utils/resizeObserver.ts";
+import { checkDomVideoChanges } from "./utils/domChanges";
+import {
+  resizeObserver,
+  determineBestPositionForTextTrack,
+} from "./utils/resizeObserver";
 // import { timer } from "./utils/timer.ts";
 
 TextTrackRenderer.addParsers([
@@ -21,6 +24,11 @@ checkDomVideoChanges(() => {
   console.warn("CHECKKKK", videoElements);
   if (videoElements.length === 0 || videoElements.length > 1) {
     // For now, we only handle a single videoElement per page.
+    document.querySelector(".SA-textTrackManager")?.remove();
+    document.querySelector(".SA-textTrackDisplayer")?.remove();
+    if (document.querySelector(".subtitlesEverywhere") !== null) {
+      document.documentElement.classList.remove("subtitlesEverywhere");
+    }
     return;
   }
 
@@ -32,36 +40,42 @@ checkDomVideoChanges(() => {
 
   // Get informations about the videoElement
   const videoElement = videoElements[0];
-  // const { bottom, width, top } = videoElement.getBoundingClientRect();
 
   // Set the UI to manage the textTrack rendering
   const containerTextTrackManager = document.createElement("div");
-  const startRenderTextTrackBtn = document.createElement("button");
-  const stopTextTrackBtn = document.createElement("button");
-  startRenderTextTrackBtn.innerText = "Start";
-  stopTextTrackBtn.innerText = "Stop";
+  const startIcon = document.createElement("img");
+  const stopIcon = document.createElement("img");
 
-  containerTextTrackManager.style.padding = "10px";
+  startIcon.src = "https://i.ibb.co/hmRJxf8/play.png";
+  startIcon.style.height = "2.5rem";
+  startIcon.style.margin = "0 3.5px";
+
+  stopIcon.src = "https://i.ibb.co/C9LMqRp/stop.png";
+  stopIcon.style.height = "2.5rem";
+  stopIcon.style.margin = "0 3.5px";
+
+  containerTextTrackManager.append(startIcon, stopIcon);
+
+  containerTextTrackManager.className = "SA-textTrackManager";
+  containerTextTrackManager.style.padding = "5px 10px";
   containerTextTrackManager.style.zIndex = "10000";
   containerTextTrackManager.style.backgroundColor = "white";
   containerTextTrackManager.style.position = "absolute";
-  // containerTextTrackManager.style.top = `${top}px`;
+  containerTextTrackManager.style.borderRadius = "2.5rem";
+  containerTextTrackManager.style.backgroundColor = "#1b1e22";
 
   // Set up the UI to display the text track in
   const textTrackDisplayer = document.createElement("div");
+  textTrackDisplayer.className = "SA-textTrackDisplayer";
   textTrackDisplayer.style.position = "absolute";
   textTrackDisplayer.style.zIndex = "10000";
-  // textTrackDisplayer.style.top = `${bottom}px`;
-  // textTrackDisplayer.style.width = `${width}px`;
 
   resizeObserver(videoElement, (_: DOMRectReadOnly) => {
     console.warn(videoElement.getBoundingClientRect());
-    const { bottom, width, top } = videoElement.getBoundingClientRect();
-    containerTextTrackManager.style.top = `${top +
-      containerTextTrackManager.clientHeight}px`;
+    const { bottom } = videoElement.getBoundingClientRect();
+    containerTextTrackManager.style.top = `${bottom / 3}px`;
 
-    textTrackDisplayer.style.top = `${bottom}px`;
-    textTrackDisplayer.style.width = `${width}px`;
+    determineBestPositionForTextTrack(videoElement, textTrackDisplayer);
   });
 
   const textTrackRenderer = new TextTrackRenderer({
@@ -76,8 +90,9 @@ checkDomVideoChanges(() => {
   //     containerTextTrackManager.style.display = "none";
   //   },
   // );
-  startRenderTextTrackBtn.onclick = async () => {
+  startIcon.onclick = async () => {
     console.warn("START RENDER");
+    determineBestPositionForTextTrack(videoElement, textTrackDisplayer);
     chrome.storage.local.get(
       ["textTrack", "subtitleType", "textTrackPicker"],
       function(result) {
@@ -93,10 +108,10 @@ checkDomVideoChanges(() => {
       },
     );
   };
-  stopTextTrackBtn.onclick = () => {
+  stopIcon.onclick = () => {
     console.warn("STOP RENDER");
     textTrackRenderer.removeTextTrack();
   };
-  containerTextTrackManager.append(startRenderTextTrackBtn, stopTextTrackBtn);
+  containerTextTrackManager.append(startIcon, stopIcon);
   document.body.append(containerTextTrackManager, textTrackDisplayer);
 });

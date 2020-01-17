@@ -16,7 +16,6 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noEmitOnError": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
