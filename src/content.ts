@@ -10,7 +10,7 @@ import {
   resizeObserver,
   determineBestPositionForTextTrack,
 } from "./utils/resizeObserver";
-// import { timer } from "./utils/timer.ts";
+import { timer } from "./utils/timer";
 
 TextTrackRenderer.addParsers([
   TTML_PARSER,
@@ -47,12 +47,14 @@ checkDomVideoChanges(() => {
   const stopIcon = document.createElement("img");
 
   startIcon.src = "https://i.ibb.co/hmRJxf8/play.png";
-  startIcon.style.height = "2.5rem";
+  startIcon.style.height = "2rem";
   startIcon.style.margin = "0 3.5px";
+  startIcon.style.cursor = "pointer";
 
   stopIcon.src = "https://i.ibb.co/C9LMqRp/stop.png";
-  stopIcon.style.height = "2.5rem";
+  stopIcon.style.height = "2rem";
   stopIcon.style.margin = "0 3.5px";
+  stopIcon.style.cursor = "pointer";
 
   containerTextTrackManager.append(startIcon, stopIcon);
 
@@ -63,17 +65,29 @@ checkDomVideoChanges(() => {
   containerTextTrackManager.style.position = "absolute";
   containerTextTrackManager.style.borderRadius = "2.5rem";
   containerTextTrackManager.style.backgroundColor = "#1b1e22";
+  const { top, left, height } = videoElement.getBoundingClientRect();
+  const scrollTopDoc = document.documentElement.scrollTop;
+  containerTextTrackManager.style.top = `${top +
+    scrollTopDoc +
+    (height / 2 - containerTextTrackManager.clientHeight)}px`;
+  containerTextTrackManager.style.left = `${left}px`;
 
   // Set up the UI to display the text track in
   const textTrackDisplayer = document.createElement("div");
   textTrackDisplayer.className = "SA-textTrackDisplayer";
   textTrackDisplayer.style.position = "absolute";
   textTrackDisplayer.style.zIndex = "10000";
+  textTrackDisplayer.style.width = "100%";
 
-  resizeObserver(videoElement, (_: DOMRectReadOnly) => {
+  // document.querySelector('video').getBoundingClientRect().top + document.documentElement.scrollTop
+  resizeObserver(videoElement, () => {
     console.warn(videoElement.getBoundingClientRect());
-    const { bottom } = videoElement.getBoundingClientRect();
-    containerTextTrackManager.style.top = `${bottom / 3}px`;
+    const { top, left, height } = videoElement.getBoundingClientRect();
+    const scrollTopDocRefreshed = document.documentElement.scrollTop;
+    containerTextTrackManager.style.top = `${top +
+      scrollTopDocRefreshed +
+      (height / 2 - containerTextTrackManager.clientHeight)}px`;
+    containerTextTrackManager.style.left = `${left}px`;
 
     determineBestPositionForTextTrack(videoElement, textTrackDisplayer);
   });
@@ -82,14 +96,16 @@ checkDomVideoChanges(() => {
     videoElement,
     textTrackElement: textTrackDisplayer,
   });
-  // timer(
-  //   () => {
-  //     containerTextTrackManager.style.display = "block";
-  //   },
-  //   () => {
-  //     containerTextTrackManager.style.display = "none";
-  //   },
-  // );
+  timer(
+    () => {
+      console.warn("ACTIVE");
+      //containerTextTrackManager.style.display = "block";
+    },
+    () => {
+      console.warn("INACTIVE");
+      //containerTextTrackManager.style.display = "none";
+    },
+  );
   startIcon.onclick = async () => {
     console.warn("START RENDER");
     determineBestPositionForTextTrack(videoElement, textTrackDisplayer);

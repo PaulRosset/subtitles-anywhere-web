@@ -3,6 +3,7 @@ export const timer = (
   onEnterInactive: () => void,
 ) => {
   let timeoutID: number | undefined = undefined;
+  let isActive = true;
   function setup() {
     window.addEventListener("mousemove", resetTimer, false);
 
@@ -23,12 +24,18 @@ export const timer = (
 
   function goInactive() {
     // do something
-    onEnterInactive();
+    if (isActive) {
+      onEnterInactive();
+      isActive = false;
+    }
   }
 
   function goActive() {
     // do something
-    onEnterActive();
+    if (!isActive) {
+      onEnterActive();
+      isActive = true;
+    }
 
     startTimer();
   }
