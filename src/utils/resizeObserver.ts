@@ -20,15 +20,16 @@ export function determineBestPositionForTextTrack(
 ) {
   const {
     bottom: videoElementViewPortBottom,
-    width,
   } = videoElement.getBoundingClientRect();
   const videoElementHeight = videoElement.videoHeight;
-  textTrackDisplayer.style.width = `${width}px`;
+  const { scrollTop } = document.documentElement;
   if (videoElementViewPortBottom > videoElementHeight) {
     const diff = (videoElementViewPortBottom - videoElementHeight) / 2;
-    textTrackDisplayer.style.top = `${videoElementViewPortBottom - diff}px`;
+    textTrackDisplayer.style.top = `${videoElementViewPortBottom -
+      diff +
+      scrollTop}px`;
     return;
   }
-  textTrackDisplayer.style.top = `${videoElementViewPortBottom}px`;
+  textTrackDisplayer.style.top = `${videoElementViewPortBottom + scrollTop}px`;
   return;
 }
