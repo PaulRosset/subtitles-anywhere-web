@@ -5,50 +5,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="options.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+    />
     <title>Document</title>
   </head>
   <body>
-    <div>
-      <div>
-        <h2>Provide your own texts tracks</h2>
-        <form id="form-infos">
-          <select name="subtitleType" id="subtitles-type">
+    <div class="subAny">
+      <h4>Text track manager:</h4>
+      <form id="formInfos">
+        <div class="positionOption">
+          <label
+            class="normalSpaceOption specifyParsers bold"
+            for="subtitleType"
+            >- Subtitles's type:
+            <div class="parsers">
+              (
+              <a href="">SRT</a>, <a href="">TTML</a>, <a href="">VTT</a>,
+              <a href="">SAMI</a>
+              )
+            </div>
+          </label>
+          <select name="subtitleType" id="subtitlesType">
             <option value="srt">SRT</option>
             <option value="ttml">TTML</option>
             <option value="vtt">VTT</option>
             <option value="sami">SAMI</option>
           </select>
+        </div>
+        <hr class="styleHr" />
+        <div class="positionOption">
+          <label class="bold"
+            >- Where do you want to get the subtitles from ?
+            <div class="parsers">
+              ( <a href="">URL</a>, <a href="">Text</a> )
+            </div>
+          </label>
           <div>
-            <label>From url ?</label>
-            <input
-              type="radio"
-              readonly=""
-              tabindex="0"
-              id="txtPicker-url"
-              name="txtPickerUrl"
-            />
+            <div class="normalSpaceOption">
+              <input
+                type="radio"
+                tabindex="0"
+                id="pickerUrl"
+                name="pickerUrl"
+              />
+              <label for="pickerUrl">URL</label>
+            </div>
+            <div class="normalSpaceOption">
+              <input
+                type="radio"
+                tabindex="0"
+                id="pickerTxt"
+                name="pickerTxt"
+              />
+              <label for="pickerTxt">Text</label>
+            </div>
           </div>
-          <div>
-            <label>From classic text ?</label>
-            <input
-              type="radio"
-              readonly=""
-              tabindex="0"
-              id="txtPicker-classic"
-              name="txtPickerClassic"
-            />
-          </div>
-          <textarea name="text" id="text" cols="30" rows="10"></textarea>
+        </div>
+        <hr class="styleHr" />
+        <div>
+          <label class="bold">
+            - Insert your subtitle:
+          </label>
+          <textarea
+            style="margin: 5px 0;"
+            class="fullSize"
+            name="text"
+            id="text"
+            rows="10"
+            placeholder="Text track"
+          ></textarea>
           <input
+            style="margin: 5px 0;"
+            class="fullSize"
             type="text"
             id="url"
             name="url"
-            placeholder="Enter url text track"
+            tabindex="0"
+            placeholder="Text track URL"
           />
-          <br />
-          <button type="submit">Save changes</button>
-        </form>
-      </div>
+        </div>
+        <hr class="styleHr" />
+        <div class="positionOption">
+          <label for="timeoffset" class="bold specifyParsers"
+            >- Time-offset:
+            <div class="parsers">( <a href="">Timeoffset</a> )</div></label
+          >
+          <input
+            style="margin: 5px 0;"
+            type="number"
+            id="timeoffset"
+            name="timeoffset"
+          />
+        </div>
+        <hr class="styleHr" />
+        <div class="saverDiv">
+          <button type="submit" class="ui primary button" id="saver">
+            Save changes
+          </button>
+          <div id="notification"></div>
+        </div>
+      </form>
     </div>
     <script src="options.js"></script>
   </body>

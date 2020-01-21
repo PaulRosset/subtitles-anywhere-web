@@ -1,58 +1,85 @@
-const urlTxtPicker = document.getElementById(
-  "txtPicker-url",
-) as HTMLInputElement;
-const classicTxtPicker = document.getElementById(
-  "txtPicker-classic",
-) as HTMLInputElement;
-const textArea = document.getElementById("text");
-const urlInput = document.getElementById("url");
+import {
+  getInfosFromLocalStorage,
+  setInfosOnLocalStorage,
+} from "./utils/storage";
+import { IOptionsTextTrackManager } from "./utils/types";
 
-const formInfos = document.getElementById(
-  "form-infos",
-) as HTMLFormElement | null;
-const subtitleTypeSelector = document.getElementById("subtitles-type");
+// Get the subtitle type
+const subtitleType = document.getElementById(
+  "subtitlesType",
+) as HTMLSelectElement;
 
-if (textArea !== null && urlInput !== null && formInfos !== null) {
-  chrome.storage.local.get(
-    ["textTrack", "subtitleType", "textTrackPicker"],
-    function(result) {
-      console.log("Value currently is " + result);
-      (textArea as HTMLTextAreaElement).value = result.textTrack || "";
-      (subtitleTypeSelector as HTMLSelectElement).value =
-        result.subtitleType || "srt";
-      if (result.textTrackPicker === "URL") {
-        urlTxtPicker.checked = true;
-      } else {
-        classicTxtPicker.checked = true;
-      }
-    },
-  );
-  classicTxtPicker.checked = true;
-  urlInput.style.display = "none";
-  urlTxtPicker.onclick = () => {
-    if (classicTxtPicker.checked) {
-      classicTxtPicker.checked = false;
-      urlInput.style.display = "block";
-      textArea.style.display = "none";
+// Get the url picker
+const urlPicker = document.getElementById("pickerUrl") as HTMLInputElement;
+const urlInput = document.getElementById("url") as HTMLInputElement;
+
+// Get the text picker
+const txtPicker = document.getElementById("pickerTxt") as HTMLInputElement;
+const textArea = document.getElementById("text") as HTMLTextAreaElement;
+
+// Get timeoffset
+const timeoffsetInput = document.getElementById(
+  "timeoffset",
+) as HTMLInputElement;
+
+// Button to save changes
+const saverBtn = document.getElementById("saver") as HTMLButtonElement;
+
+// Notification div
+const notification = document.getElementById("notification");
+
+getInfosFromLocalStorage([
+  "textTrack",
+  "urlTextTrack",
+  "subtitleType",
+  "textTrackPicker",
+  "timeoffset",
+]).then((res: IOptionsTextTrackManager) => {
+  textArea.value = res.textTrack || "";
+  subtitleType.value = res.subtitleType || "srt";
+  timeoffsetInput.value = res.timeoffset || "0";
+  urlInput.value = res.urlTextTrack || "";
+  if (res.textTrackPicker === "URL") {
+    urlPicker.checked = true;
+    txtPicker.checked = false;
+    textArea.style.display = "none";
+    urlInput.style.display = "block";
+  } else {
+    txtPicker.checked = true;
+    urlPicker.checked = false;
+    urlInput.style.display = "none";
+    textArea.style.display = "block";
+  }
+});
+urlPicker.onclick = () => {
+  if (txtPicker.checked) {
+    txtPicker.checked = false;
+    urlInput.style.display = "block";
+    textArea.style.display = "none";
+  }
+};
+txtPicker.onclick = () => {
+  if (urlPicker.checked) {
+    urlPicker.checked = false;
+    urlInput.style.display = "none";
+    textArea.style.display = "block";
+  }
+};
+saverBtn.onclick = () => {
+  setInfosOnLocalStorage({
+    subtitleType: subtitleType.value,
+    textTrack: !urlPicker.checked ? textArea.value : "",
+    urlTextTrack: urlPicker.checked ? urlInput.value : "",
+    textTrackPicker: urlPicker.checked ? "URL" : "LOCAL",
+    timeoffset: timeoffsetInput.value,
+  }).then(() => {
+    if (notification === null) {
+      return;
     }
-  };
-  classicTxtPicker.onclick = () => {
-    if (urlTxtPicker.checked) {
-      urlTxtPicker.checked = false;
-      urlInput.style.display = "none";
-      textArea.style.display = "block";
-    }
-  };
-  formInfos.onclick = () => {
-    chrome.storage.local.set(
-      {
-        textTrack: (textArea as HTMLTextAreaElement).value,
-        subtitleType: (subtitleTypeSelector as HTMLSelectElement).value,
-        textTrackPicker: urlTxtPicker.checked ? "URL" : "LOCAL",
-      },
-      () => {
-        console.log("Value is set to ");
-      },
-    );
-  };
-}
+    notification.innerText = "Saved!";
+    notification.style.color = "#21ba45";
+    setTimeout(() => {
+      notification.innerText = "";
+    }, 3000);
+  });
+};
