@@ -11,7 +11,7 @@ import {
   resizeObserver,
   determineBestPositionForTextTrack,
 } from "./utils/resizeObserver";
-import { onMouseMove } from "./utils/timer";
+import { onMouseMove } from "./utils/onMouseMove";
 
 TextTrackRenderer.addParsers([
   TTML_PARSER,
@@ -25,11 +25,7 @@ let mouseMoveSub: (() => void) | null = null;
 checkDomVideoChanges(() => {
   const videoElements = document.querySelectorAll("video");
   console.warn("CHECKKKK", videoElements);
-  if (
-    videoElements.length === 0 ||
-    videoElements.length > 1
-    // (videoElements.length === 1 && videoElements[0].readyState === 0)
-  ) {
+  if (videoElements.length === 0 || videoElements.length > 1) {
     // For now, we only handle a single videoElement per page.
     mouseMoveSub?.();
     document.querySelector(".SA-textTrackManager")?.remove();

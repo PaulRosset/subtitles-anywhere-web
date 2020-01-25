@@ -1,7 +1,7 @@
 {
   "name": "subtitles-anywhere",
   "version": "1.0.0",
-  "description": "Give to the user the possibility to display subtitles on HTMLVIDEOELEMENT",
+  "description": "Give possibility to display subtitles anywhere on video element",
   "main": "index.js",
   "author": "Paul Rosset (paulrosset96@gmail.com)",
   "license": "MIT",

@@ -7,7 +7,7 @@
   "minimum_chrome_version": "68",
   "web_accessible_resources": ["medias/play.svg", "medias/stop.svg"],
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": "medias/icon.png",
     "default_title": "Subtitles Anywhere"
   },
   "permissions": ["storage"],
@@ -17,7 +17,7 @@
   },
   "optional_permissions": ["http://*/*", "https://*/*"],
   "icons": {
-    "128": "icon.png"
+    "128": "medias/icon.png"
   },
   "content_scripts": [
     {
