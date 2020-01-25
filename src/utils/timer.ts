@@ -1,11 +1,11 @@
 export const timer = (
   onEnterActive: () => void,
   onEnterInactive: () => void,
-) => {
+): (() => void) => {
   let timeoutID: number | undefined = undefined;
   let isActive = true;
   function setup() {
-    window.addEventListener("mousemove", resetTimer, false);
+    document.addEventListener("mousemove", resetTimer, true);
 
     startTimer();
   }
@@ -39,4 +39,9 @@ export const timer = (
 
     startTimer();
   }
+
+  return () => {
+    window.clearTimeout(timeoutID);
+    document.removeEventListener("mousemove", resetTimer, true);
+  };
 };

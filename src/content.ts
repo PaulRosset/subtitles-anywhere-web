@@ -10,7 +10,7 @@ import {
   resizeObserver,
   determineBestPositionForTextTrack,
 } from "./utils/resizeObserver";
-import { timer } from "./utils/timer";
+import { onMouseMove } from "./utils/timer";
 
 TextTrackRenderer.addParsers([
   TTML_PARSER,
@@ -19,11 +19,18 @@ TextTrackRenderer.addParsers([
   SAMI_PARSER,
 ]);
 
+let mouseMoveSub: (() => void) | null = null;
+
 checkDomVideoChanges(() => {
   const videoElements = document.querySelectorAll("video");
   console.warn("CHECKKKK", videoElements);
-  if (videoElements.length === 0 || videoElements.length > 1) {
+  if (
+    videoElements.length === 0 ||
+    videoElements.length > 1 ||
+    (videoElements.length === 1 && videoElements[0].readyState === 0)
+  ) {
     // For now, we only handle a single videoElement per page.
+    mouseMoveSub?.();
     document.querySelector(".SA-textTrackManager")?.remove();
     document.querySelector(".SA-textTrackDisplayer")?.remove();
     if (document.querySelector(".subtitlesEverywhere") !== null) {
@@ -96,14 +103,15 @@ checkDomVideoChanges(() => {
     videoElement,
     textTrackElement: textTrackDisplayer,
   });
-  timer(
+  mouseMoveSub = onMouseMove(
+    textTrackRenderer,
     () => {
       console.warn("ACTIVE");
-      //containerTextTrackManager.style.display = "block";
+      // containerTextTrackManager.style.display = "block";
     },
     () => {
       console.warn("INACTIVE");
-      //containerTextTrackManager.style.display = "none";
+      // containerTextTrackManager.style.display = "none";
     },
   );
   startIcon.onclick = async () => {
