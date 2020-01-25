@@ -32,7 +32,7 @@ module.exports = () => ({
   plugins: [
     new CopyWebPackPlugin([
       {
-        from: "*",
+        from: "**",
         context: "src",
         ignore: ["*.js", "*.ts", "*.tsx"],
       },

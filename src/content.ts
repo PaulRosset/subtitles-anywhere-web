@@ -5,6 +5,7 @@ import TextTrackRenderer, {
   SAMI_PARSER,
 } from "rx-player/experimental/tools/TextTrackRenderer";
 
+import { getInfosFromLocalStorage } from "./utils/storage";
 import { checkDomVideoChanges } from "./utils/domChanges";
 import {
   resizeObserver,
@@ -26,8 +27,8 @@ checkDomVideoChanges(() => {
   console.warn("CHECKKKK", videoElements);
   if (
     videoElements.length === 0 ||
-    videoElements.length > 1 ||
-    (videoElements.length === 1 && videoElements[0].readyState === 0)
+    videoElements.length > 1
+    // (videoElements.length === 1 && videoElements[0].readyState === 0)
   ) {
     // For now, we only handle a single videoElement per page.
     mouseMoveSub?.();
@@ -53,12 +54,12 @@ checkDomVideoChanges(() => {
   const startIcon = document.createElement("img");
   const stopIcon = document.createElement("img");
 
-  startIcon.src = "https://i.ibb.co/hmRJxf8/play.png";
+  startIcon.src = chrome.runtime.getURL("medias/play.svg");
   startIcon.style.height = "2rem";
   startIcon.style.margin = "0 3.5px";
   startIcon.style.cursor = "pointer";
 
-  stopIcon.src = "https://i.ibb.co/C9LMqRp/stop.png";
+  stopIcon.src = chrome.runtime.getURL("medias/stop.svg");
   stopIcon.style.height = "2rem";
   stopIcon.style.margin = "0 3.5px";
   stopIcon.style.cursor = "pointer";
@@ -66,6 +67,7 @@ checkDomVideoChanges(() => {
   containerTextTrackManager.append(startIcon, stopIcon);
 
   containerTextTrackManager.className = "SA-textTrackManager";
+  containerTextTrackManager.style.display = "flex";
   containerTextTrackManager.style.padding = "5px 10px";
   containerTextTrackManager.style.zIndex = "10000";
   containerTextTrackManager.style.backgroundColor = "white";
@@ -86,9 +88,7 @@ checkDomVideoChanges(() => {
   textTrackDisplayer.style.zIndex = "10000";
   textTrackDisplayer.style.width = "100%";
 
-  // document.querySelector('video').getBoundingClientRect().top + document.documentElement.scrollTop
   resizeObserver(videoElement, () => {
-    console.warn(videoElement.getBoundingClientRect());
     const { top, left, height } = videoElement.getBoundingClientRect();
     const scrollTopDocRefreshed = document.documentElement.scrollTop;
     containerTextTrackManager.style.top = `${top +
@@ -115,22 +115,49 @@ checkDomVideoChanges(() => {
     },
   );
   startIcon.onclick = async () => {
-    console.warn("START RENDER");
-    determineBestPositionForTextTrack(videoElement, textTrackDisplayer);
-    chrome.storage.local.get(
-      ["textTrack", "subtitleType", "textTrackPicker"],
-      function(result) {
-        console.log("Value currently is " + result);
-        try {
-          textTrackRenderer.setTextTrack({
-            data: result.textTrack,
-            type: result.subtitleType,
-          });
-        } catch (e) {
-          console.warn(e);
-        }
-      },
-    );
+    try {
+      console.warn("START RENDER");
+      determineBestPositionForTextTrack(videoElement, textTrackDisplayer);
+      const {
+        textTrack,
+        subtitleType,
+        timeoffset,
+        textTrackPicker,
+        urlTextTrack,
+      } = await getInfosFromLocalStorage([
+        "textTrack",
+        "subtitleType",
+        "timeoffset",
+      ]);
+      // get informations from url if asked to.
+      if (
+        textTrackPicker === "URL" &&
+        urlTextTrack !== undefined &&
+        subtitleType !== undefined
+      ) {
+        const resp = await fetch(urlTextTrack);
+        const textTrackFromURL = await resp.text();
+        textTrackRenderer.setTextTrack({
+          data: textTrackFromURL,
+          type: subtitleType,
+          timeOffset: Number(timeoffset),
+        });
+      } else if (
+        textTrackPicker === "LOCAL" &&
+        textTrack !== undefined &&
+        subtitleType !== undefined
+      ) {
+        textTrackRenderer.setTextTrack({
+          data: textTrack,
+          type: subtitleType,
+          timeOffset: Number(timeoffset),
+        });
+      } else {
+        // detect which parameter is badly used.
+      }
+    } catch (e) {
+      console.warn(e);
+    }
   };
   stopIcon.onclick = () => {
     console.warn("STOP RENDER");

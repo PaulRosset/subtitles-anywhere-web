@@ -5,6 +5,7 @@
   "homepage_url": "https://github.com/PaulRosset/subtitles-anywhere-web",
   "manifest_version": 2,
   "minimum_chrome_version": "68",
+  "web_accessible_resources": ["medias/play.svg", "medias/stop.svg"],
   "browser_action": {
     "default_icon": "icon.png",
     "default_title": "Subtitles Anywhere"

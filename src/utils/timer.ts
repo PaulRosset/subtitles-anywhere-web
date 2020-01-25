@@ -1,4 +1,7 @@
-export const timer = (
+import TextTrackRenderer from "rx-player/experimental/tools/TextTrackRenderer";
+
+export const onMouseMove = (
+  textTrackRenderer: TextTrackRenderer,
   onEnterActive: () => void,
   onEnterInactive: () => void,
 ): (() => void) => {
@@ -41,6 +44,7 @@ export const timer = (
   }
 
   return () => {
+    textTrackRenderer.dispose();
     window.clearTimeout(timeoutID);
     document.removeEventListener("mousemove", resetTimer, true);
   };
