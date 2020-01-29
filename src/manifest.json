@@ -1,14 +1,14 @@
 {
-  "name": "Subtitles Anywhere Web",
+  "name": "SubAny Web",
   "version": "1.0.0",
-  "description": "Give you the possibility to add any provided subtitles to your prefered service streaming web platform.",
+  "description": "Add your own SRT, VTT, SAMI, or TTML subtitles to your preferred service streaming web platform.",
   "homepage_url": "https://github.com/PaulRosset/subtitles-anywhere-web",
   "manifest_version": 2,
   "minimum_chrome_version": "68",
   "web_accessible_resources": ["medias/play.svg", "medias/stop.svg"],
   "browser_action": {
     "default_icon": "medias/icon.png",
-    "default_title": "Subtitles Anywhere"
+    "default_title": "SubAny"
   },
   "permissions": ["storage"],
   "options_ui": {
