@@ -16,7 +16,7 @@ export const onMouseMove = (
 
   function startTimer() {
     // wait 2 seconds before calling goInactive
-    timeoutID = window.setTimeout(goInactive, 2000);
+    timeoutID = window.setTimeout(goInactive, 1500);
   }
 
   function resetTimer() {

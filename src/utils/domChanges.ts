@@ -10,7 +10,13 @@ export function checkDomVideoChanges(cb: () => void) {
               (addedNode as Element).tagName === "VIDEO" ||
               /player/i.test((addedNode as Element)?.className)
             ) {
-              console.warn("pOLOOOO", addedNode);
+              console.warn("ADDED NODE", addedNode);
+              cb();
+            }
+          });
+          mutation.removedNodes.forEach(removedNode => {
+            if ((removedNode as Element).tagName === "VIDEO") {
+              console.warn("REMOVED NODE", removedNode);
               cb();
             }
           });
