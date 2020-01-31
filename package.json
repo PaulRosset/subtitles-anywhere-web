@@ -21,6 +21,6 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "rx-player": "^3.17.1"
+    "rx-player": "^3.18.0"
   }
 }
