@@ -4,6 +4,8 @@
 
 ## Install
 
+Alpha version, is not released on the chrome extension store yet. If you want to test you must build it manually.
+
 ### Context
 
 The streaming world has never been so exciting, many companies are investing a large amount of ressources to deliver video on the web. This is changin how we get entertain.
