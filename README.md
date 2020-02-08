@@ -8,11 +8,14 @@ Alpha version, is not released on the chrome extension store yet. If you want to
 
 ### Context
 
-The streaming world has never been so exciting, many companies are investing a large amount of ressources to deliver video on the web. This is changin how we get entertain.
+The streaming world has never been so exciting. Many companies are investing a large number of resources to deliver video on the web. This is changing how we get entertained.
 
-However, depending of the country you live, you may get some limitations of right management about certain videos content that can be deliver and broadcasted. This also concern subtitles.
+However, depending on the country you live, you may face some limitations of right about specific video content that can be delivered. This also concerns subtitles.
 
-This is also useful for people that don't like the subtitles that the services is providing and so providing the subtitles you want.
+To answer these problems, you can now provide your subtitles.
+Thus, for example, if you stay in a country where the streaming provider can't have access to the captions you wish, you can use that extension. 
+
+This is also useful for people that don't like subtitles that the services are providing and so providing your captions.
 
 ### How it works ?
 
