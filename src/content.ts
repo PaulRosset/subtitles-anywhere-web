@@ -102,15 +102,18 @@ checkDomVideoChanges(() => {
   mouseMoveSubscription = onMouseMove(
     textTrackRenderer,
     () => {
-      containerTextTrackManager.style.display = "block";
+      //containerTextTrackManager.style.display = "block";
     },
     () => {
-      containerTextTrackManager.style.display = "none";
+      //containerTextTrackManager.style.display = "none";
     },
   );
 
   startIcon.onclick = async () => {
     try {
+      // Notif user of the click...
+      containerTextTrackManager.style.border = "solid 1px #0060E5";
+      setTimeout(() => containerTextTrackManager.style.border = "none", 1000);
       determineBestPositionForTextTrack(videoElement, textTrackDisplayer);
       const {
         textTrack,
@@ -122,6 +125,8 @@ checkDomVideoChanges(() => {
         "textTrack",
         "subtitleType",
         "timeoffset",
+        "textTrackPicker",
+        "urlTextTrack"
       ]);
       // get informations from url if asked to.
       if (
@@ -149,6 +154,9 @@ checkDomVideoChanges(() => {
       } else {
         // A mandatory param is not given
         // Lets see how we can handle gracefully the ext's error
+        console.warn(`
+          [SUBANY]-Error: Have you gave all the mandatory parameter
+        `)
       }
     } catch (e) {
       // Display error in the console for now
@@ -158,7 +166,15 @@ checkDomVideoChanges(() => {
       }
     }
   };
-  stopIcon.onclick = () => textTrackRenderer.removeTextTrack();
+  stopIcon.onclick = () => {
+    // Notif user of the click...
+    containerTextTrackManager.style.border = "solid 1px #0060E5";
+    setTimeout(() => containerTextTrackManager.style.border = "none", 1000);
+    textTrackRenderer.removeTextTrack();
+  }
   containerTextTrackManager.append(startIcon, stopIcon);
-  document.body.append(containerTextTrackManager, textTrackDisplayer);
+  // To keep everything working in fullscreen mode, we have to append the closest possible to the video element
+  if (videoElement.parentElement !== null) {
+    videoElement.parentElement.append(containerTextTrackManager, textTrackDisplayer);
+  }
 });
