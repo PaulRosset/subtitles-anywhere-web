@@ -102,10 +102,10 @@ checkDomVideoChanges(() => {
   mouseMoveSubscription = onMouseMove(
     textTrackRenderer,
     () => {
-      //containerTextTrackManager.style.display = "block";
+      containerTextTrackManager.style.display = "block";
     },
     () => {
-      //containerTextTrackManager.style.display = "none";
+      containerTextTrackManager.style.display = "none";
     },
   );
 
