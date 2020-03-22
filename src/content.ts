@@ -2,14 +2,14 @@ import TextTrackRenderer, {
   TTML_PARSER,
   VTT_PARSER,
   SRT_PARSER,
-  SAMI_PARSER,
+  SAMI_PARSER
 } from "rx-player/experimental/tools/TextTrackRenderer";
 
 import { getInfosFromLocalStorage } from "./utils/storage";
 import { checkDomVideoChanges } from "./utils/domChanges";
 import {
   resizeObserver,
-  determineBestPositionForTextTrack,
+  determineBestPositionForTextTrack
 } from "./utils/resizeObserver";
 import { onMouseMove } from "./utils/onMouseMove";
 
@@ -17,15 +17,16 @@ TextTrackRenderer.addParsers([
   TTML_PARSER,
   VTT_PARSER,
   SRT_PARSER,
-  SAMI_PARSER,
+  SAMI_PARSER
 ]);
 
 let mouseMoveSubscription: (() => void) | null = null;
+const { checkVideoChanges, clear } = checkDomVideoChanges();
 
-checkDomVideoChanges(() => {
-  const videoElements = document.querySelectorAll("video");
-  if (videoElements.length === 0 || videoElements.length > 1) {
+checkVideoChanges(videoElement => {
+  if (videoElement == null) {
     // For now, we only handle a single videoElement per page.
+    clear();
     mouseMoveSubscription?.();
     document.querySelector(".SA-textTrackManager")?.remove();
     document.querySelector(".SA-textTrackDisplayer")?.remove();
@@ -40,9 +41,6 @@ checkDomVideoChanges(() => {
     return;
   }
   document.documentElement.classList.add("subtitlesEverywhere");
-
-  // Get informations about the videoElement
-  const videoElement = videoElements[0];
 
   // Set the UI to manage the textTrack rendering
   const containerTextTrackManager = document.createElement("div");
@@ -96,7 +94,7 @@ checkDomVideoChanges(() => {
 
   const textTrackRenderer = new TextTrackRenderer({
     videoElement,
-    textTrackElement: textTrackDisplayer,
+    textTrackElement: textTrackDisplayer
   });
 
   mouseMoveSubscription = onMouseMove(
@@ -106,21 +104,21 @@ checkDomVideoChanges(() => {
     },
     () => {
       containerTextTrackManager.style.display = "none";
-    },
+    }
   );
 
   startIcon.onclick = async () => {
     try {
       // Notif user of the click...
       containerTextTrackManager.style.border = "solid 1px #0060E5";
-      setTimeout(() => containerTextTrackManager.style.border = "none", 1000);
+      setTimeout(() => (containerTextTrackManager.style.border = "none"), 1000);
       determineBestPositionForTextTrack(videoElement, textTrackDisplayer);
       const {
         textTrack,
         subtitleType,
         timeoffset,
         textTrackPicker,
-        urlTextTrack,
+        urlTextTrack
       } = await getInfosFromLocalStorage([
         "textTrack",
         "subtitleType",
@@ -139,7 +137,7 @@ checkDomVideoChanges(() => {
         textTrackRenderer.setTextTrack({
           data: textTrackFromURL,
           type: subtitleType,
-          timeOffset: Number(timeoffset),
+          timeOffset: Number(timeoffset)
         });
       } else if (
         textTrackPicker === "LOCAL" &&
@@ -149,14 +147,14 @@ checkDomVideoChanges(() => {
         textTrackRenderer.setTextTrack({
           data: textTrack,
           type: subtitleType,
-          timeOffset: Number(timeoffset),
+          timeOffset: Number(timeoffset)
         });
       } else {
         // A mandatory param is not given
         // Lets see how we can handle gracefully the ext's error
         console.warn(`
-          [SUBANY]-Error: Have you gave all the mandatory parameter
-        `)
+          [SUBANY]-Error: Have you gave all the mandatory parameters?
+        `);
       }
     } catch (e) {
       // Display error in the console for now
@@ -169,12 +167,15 @@ checkDomVideoChanges(() => {
   stopIcon.onclick = () => {
     // Notif user of the click...
     containerTextTrackManager.style.border = "solid 1px #0060E5";
-    setTimeout(() => containerTextTrackManager.style.border = "none", 1000);
+    setTimeout(() => (containerTextTrackManager.style.border = "none"), 1000);
     textTrackRenderer.removeTextTrack();
-  }
+  };
   containerTextTrackManager.append(startIcon, stopIcon);
   // To keep everything working in fullscreen mode, we have to append the closest possible to the video element
   if (videoElement.parentElement !== null) {
-    videoElement.parentElement.append(containerTextTrackManager, textTrackDisplayer);
+    videoElement.parentElement.append(
+      containerTextTrackManager,
+      textTrackDisplayer
+    );
   }
 });

@@ -1,10 +1,10 @@
-# <img src="src/medias/icon.png" width="45" align="left"> SubAny
+# <img src="src/medias/icon.png" width="45" height="45" align="left"> SubAny
 
 > A **Chrome extension** that allow you to provide **SRT**, **TTML**, **VTT**, or **SAMI** subtitles to any video on the web.
 
 ## Install
 
-Alpha version, is not released on the chrome extension store yet. If you want to test you must build it manually.
+- [**Chrome** extension][https://chrome.google.com/webstore/detail/subany-web/japfodgakhloekokcjbapdodojbhnnkc] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/japfodgakhloekokcjbapdodojbhnnkc.svg?label=%20">][https://chrome.google.com/webstore/detail/subany-web/japfodgakhloekokcjbapdodojbhnnkc]
 
 ### Context
 
@@ -13,13 +13,13 @@ The streaming world has never been so exciting. Many companies are investing a l
 However, depending on the country you live, you may face some limitations of right about specific video content that can be delivered. This also concerns subtitles.
 
 To answer these problems, you can now provide your subtitles.
-Thus, for example, if you stay in a country where the streaming provider can't have access to the captions you wish, you can use that extension. 
+Thus, for example, if you stay in a country where the streaming provider can't have access to the captions you wish, you can use that extension.
 
 This is also useful for people that don't like subtitles that the services are providing and so providing your captions.
 
 ### How it works ?
 
-The magic behind is the [rx-player](https://github.com/canalplus/rx-player).
+The magic behind is the [rx-player's tools](https://github.com/canalplus/rx-player).
 
 Which will do the hard work:
 
