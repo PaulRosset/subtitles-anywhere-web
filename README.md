@@ -4,7 +4,7 @@
 
 ## Install
 
-- [**Chrome** extension][https://chrome.google.com/webstore/detail/subany-web/japfodgakhloekokcjbapdodojbhnnkc] [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/japfodgakhloekokcjbapdodojbhnnkc.svg?label=%20">][https://chrome.google.com/webstore/detail/subany-web/japfodgakhloekokcjbapdodojbhnnkc]
+- [**Chrome** extension](https://chrome.google.com/webstore/detail/subany-web/japfodgakhloekokcjbapdodojbhnnkc) [<img valign="middle" src="https://img.shields.io/chrome-web-store/v/japfodgakhloekokcjbapdodojbhnnkc.svg?label=%20">](https://chrome.google.com/webstore/detail/subany-web/japfodgakhloekokcjbapdodojbhnnkc)
 
 ### Context
 
