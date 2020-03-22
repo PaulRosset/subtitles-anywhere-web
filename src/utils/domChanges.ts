@@ -1,31 +1,37 @@
-export function checkDomVideoChanges(cb: () => void) {
-  window.addEventListener("DOMContentLoaded", () => {
-    cb();
-    if (MutationObserver) {
-      // define a new observer
-      const obs = new MutationObserver(function(mutations) {
-        mutations.forEach(mutation => {
-          mutation.addedNodes.forEach(addedNode => {
-            if (
-              (addedNode as Element).tagName === "VIDEO" ||
-              /player/i.test((addedNode as Element)?.className)
-            ) {
-              cb();
-            }
-          });
-          mutation.removedNodes.forEach(removedNode => {
-            if ((removedNode as Element).tagName === "VIDEO") {
-              cb();
-            }
-          });
-        });
+export function checkDomVideoChanges(refreshInterval = 5000) {
+  let id: NodeJS.Timeout | null = null;
+  let videoElement: HTMLVideoElement | null | undefined = null;
+
+  return {
+    checkVideoChanges(
+      cb: (videoElement: HTMLVideoElement | null | undefined) => void
+    ) {
+      window.addEventListener("DOMContentLoaded", () => {
+        if (videoElement === null) {
+          const video = Array.from(document.querySelectorAll("video")).find(
+            video => video.readyState >= 3
+          );
+          cb(video);
+          videoElement = video;
+        }
+
+        id = setInterval(() => {
+          const videos = document.querySelectorAll("video");
+          const readyVideo = Array.from(videos).find(
+            video => video.readyState >= 3
+          );
+          if (videoElement !== readyVideo) {
+            cb(readyVideo);
+            videoElement = readyVideo;
+          }
+        }, refreshInterval);
       });
-      // have the observer observe foo for changes in children
-      obs.observe(document.body, {
-        childList: true,
-        subtree: true,
-        characterData: true,
-      });
+    },
+    clear() {
+      if (id !== null) {
+        clearInterval(id);
+      }
+      videoElement = null;
     }
-  });
+  };
 }
