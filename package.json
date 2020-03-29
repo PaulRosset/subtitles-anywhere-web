@@ -1,6 +1,6 @@
 {
   "name": "subtitles-anywhere",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Add your own SRT, VTT, SAMI, or TTML subtitles to your preferred service streaming web platform.",
   "author": "Paul Rosset (paulrosset96@gmail.com)",
   "license": "MIT",
