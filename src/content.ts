@@ -51,11 +51,13 @@ checkVideoChanges(videoElement => {
   startIcon.style.height = "2rem";
   startIcon.style.margin = "0 3.5px";
   startIcon.style.cursor = "pointer";
+  startIcon.style.pointerEvents = "auto";
 
   stopIcon.src = chrome.runtime.getURL("medias/stop.svg");
   stopIcon.style.height = "2rem";
   stopIcon.style.margin = "0 3.5px";
   stopIcon.style.cursor = "pointer";
+  stopIcon.style.pointerEvents = "auto";
 
   containerTextTrackManager.append(startIcon, stopIcon);
 
