@@ -1,6 +1,6 @@
 export function resizeObserver(
   elem: HTMLElement,
-  cb: (entries: DOMRectReadOnly) => void,
+  cb: (entries: DOMRectReadOnly) => void
 ) {
   const resizeObserver = new ResizeObserver(entries => {
     entries.forEach(elemUpdated => {
@@ -15,10 +15,10 @@ export function resizeObserver(
 
 export function determineBestPositionForTextTrack(
   videoElement: HTMLVideoElement,
-  textTrackDisplayer: HTMLDivElement,
+  textTrackDisplayer: HTMLDivElement
 ) {
   const {
-    bottom: videoElementViewPortBottom,
+    bottom: videoElementViewPortBottom
   } = videoElement.getBoundingClientRect();
   const { scrollTop, scrollHeight } = document.documentElement;
   if (videoElementViewPortBottom > scrollHeight) {
@@ -27,6 +27,7 @@ export function determineBestPositionForTextTrack(
       scrollTop}px`;
     return;
   }
-  textTrackDisplayer.style.top = `${((90/100 * videoElementViewPortBottom) + scrollTop)}px`;
+  textTrackDisplayer.style.top = `${(85 / 100) * videoElementViewPortBottom +
+    scrollTop}px`;
   return;
 }

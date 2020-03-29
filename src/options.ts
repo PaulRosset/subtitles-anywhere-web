@@ -1,12 +1,12 @@
 import {
   getInfosFromLocalStorage,
-  setInfosOnLocalStorage,
+  setInfosOnLocalStorage
 } from "./utils/storage";
 import { IOptionsTextTrackManager } from "./utils/types";
 
 // Get the subtitle type
 const subtitleType = document.getElementById(
-  "subtitlesType",
+  "subtitlesType"
 ) as HTMLSelectElement;
 
 // Get the url picker
@@ -19,8 +19,11 @@ const textArea = document.getElementById("text") as HTMLTextAreaElement;
 
 // Get timeoffset
 const timeoffsetInput = document.getElementById(
-  "timeoffset",
+  "timeoffset"
 ) as HTMLInputElement;
+
+// Get subtitle size in px
+const subSizepxl = document.getElementById("sizeSub") as HTMLInputElement;
 
 // Button to save changes
 const saverBtn = document.getElementById("saver") as HTMLButtonElement;
@@ -34,10 +37,12 @@ getInfosFromLocalStorage([
   "subtitleType",
   "textTrackPicker",
   "timeoffset",
+  "sizeSub"
 ]).then((res: IOptionsTextTrackManager) => {
   textArea.value = res.textTrack || "";
   subtitleType.value = res.subtitleType || "srt";
   timeoffsetInput.value = res.timeoffset || "0";
+  subSizepxl.value = res.sizeSub || "28";
   urlInput.value = res.urlTextTrack || "";
   if (res.textTrackPicker === "URL") {
     urlPicker.checked = true;
@@ -72,6 +77,7 @@ saverBtn.onclick = () => {
     urlTextTrack: urlPicker.checked ? urlInput.value : "",
     textTrackPicker: urlPicker.checked ? "URL" : "LOCAL",
     timeoffset: timeoffsetInput.value,
+    sizeSub: subSizepxl.value || "28"
   }).then(() => {
     if (notification === null) {
       return;

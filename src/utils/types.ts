@@ -4,4 +4,5 @@ export interface IOptionsTextTrackManager {
   subtitleType?: string;
   textTrackPicker?: "URL" | "LOCAL";
   timeoffset?: string;
+  sizeSub?: string;
 }

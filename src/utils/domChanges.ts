@@ -20,9 +20,7 @@ export function checkDomVideoChanges(refreshInterval = 5000) {
 
         id = window.setInterval(() => {
           const videos = Array.from(document.querySelectorAll("video"));
-          const readyVideo = Array.from(videos).find(
-            video => video.readyState >= 3
-          );
+          const readyVideo = videos.find(video => video.readyState >= 3);
           if (videoElement !== readyVideo) {
             cb(readyVideo);
             videoElement = readyVideo;

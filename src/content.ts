@@ -7,6 +7,7 @@ import TextTrackRenderer, {
 
 import { getInfosFromLocalStorage } from "./utils/storage";
 import { checkDomVideoChanges } from "./utils/domChanges";
+import { styleSheetManager } from "./utils/addStyleSheet";
 import {
   resizeObserver,
   determineBestPositionForTextTrack
@@ -22,9 +23,11 @@ TextTrackRenderer.addParsers([
 
 let mouseMoveSubscription: (() => void) | null = null;
 const { checkVideoChanges } = checkDomVideoChanges();
+const { insertStyleSheetRule, cleanStyleSheet } = styleSheetManager();
 
 checkVideoChanges(videoElement => {
   if (videoElement == null) {
+    cleanStyleSheet();
     mouseMoveSubscription?.();
     document.querySelector(".SA-textTrackManager")?.remove();
     document.querySelector(".SA-textTrackDisplayer")?.remove();
@@ -118,13 +121,15 @@ checkVideoChanges(videoElement => {
         subtitleType,
         timeoffset,
         textTrackPicker,
-        urlTextTrack
+        urlTextTrack,
+        sizeSub
       } = await getInfosFromLocalStorage([
         "textTrack",
         "subtitleType",
         "timeoffset",
         "textTrackPicker",
-        "urlTextTrack"
+        "urlTextTrack",
+        "sizeSub"
       ]);
       // get informations from url if asked to.
       if (
@@ -134,6 +139,10 @@ checkVideoChanges(videoElement => {
       ) {
         const resp = await fetch(urlTextTrack);
         const textTrackFromURL = await resp.text();
+        // Insert the wanted size for the subtitles
+        insertStyleSheetRule(
+          `.rxp-texttrack-span { font-size: ${sizeSub}px; }`
+        );
         textTrackRenderer.setTextTrack({
           data: textTrackFromURL,
           type: subtitleType,
@@ -144,6 +153,10 @@ checkVideoChanges(videoElement => {
         textTrack !== undefined &&
         subtitleType !== undefined
       ) {
+        // Insert the wanted size for the subtitles
+        insertStyleSheetRule(
+          `.rxp-texttrack-span { font-size: ${sizeSub}px; }`
+        );
         textTrackRenderer.setTextTrack({
           data: textTrack,
           type: subtitleType,
