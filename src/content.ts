@@ -21,12 +21,10 @@ TextTrackRenderer.addParsers([
 ]);
 
 let mouseMoveSubscription: (() => void) | null = null;
-const { checkVideoChanges, clear } = checkDomVideoChanges();
+const { checkVideoChanges } = checkDomVideoChanges();
 
 checkVideoChanges(videoElement => {
   if (videoElement == null) {
-    // For now, we only handle a single videoElement per page.
-    clear();
     mouseMoveSubscription?.();
     document.querySelector(".SA-textTrackManager")?.remove();
     document.querySelector(".SA-textTrackDisplayer")?.remove();

@@ -1,5 +1,5 @@
 export function checkDomVideoChanges(refreshInterval = 5000) {
-  let id: NodeJS.Timeout | null = null;
+  let id: number | null = null;
   let videoElement: HTMLVideoElement | null | undefined = null;
 
   return {
@@ -8,15 +8,18 @@ export function checkDomVideoChanges(refreshInterval = 5000) {
     ) {
       window.addEventListener("DOMContentLoaded", () => {
         if (videoElement === null) {
-          const video = Array.from(document.querySelectorAll("video")).find(
+          const videoElementsAtFirstRender = Array.from(
+            document.querySelectorAll("video")
+          );
+          const video = videoElementsAtFirstRender.find(
             video => video.readyState >= 3
           );
           cb(video);
           videoElement = video;
         }
 
-        id = setInterval(() => {
-          const videos = document.querySelectorAll("video");
+        id = window.setInterval(() => {
+          const videos = Array.from(document.querySelectorAll("video"));
           const readyVideo = Array.from(videos).find(
             video => video.readyState >= 3
           );
