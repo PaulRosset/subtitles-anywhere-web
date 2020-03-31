@@ -1,6 +1,6 @@
 {
   "name": "SubAny Web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Add your own SRT, VTT, SAMI, or TTML subtitles to your preferred service streaming web platform.",
   "homepage_url": "https://github.com/PaulRosset/subtitles-anywhere-web",
   "manifest_version": 2,

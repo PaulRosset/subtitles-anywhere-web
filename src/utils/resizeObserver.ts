@@ -27,7 +27,7 @@ export function determineBestPositionForTextTrack(
       scrollTop}px`;
     return;
   }
-  textTrackDisplayer.style.top = `${(85 / 100) * videoElementViewPortBottom +
+  textTrackDisplayer.style.top = `${(87 / 100) * videoElementViewPortBottom +
     scrollTop}px`;
   return;
 }
